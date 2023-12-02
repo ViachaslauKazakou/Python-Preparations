@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "p-preparations"
+version = "0.1.0"
+description = "Common questions"
+authors = ["Viachaslau Kazakou <sly.kazakoff@epam.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+asyncpg = "^0.27.0"
+python-json-logger = "^2.0.7"
+uvloop = "^0.17.0"
+yarl = "^1.9.2"
+aiohttp-swagger3 = "^0.7.4"
+attrs = "21.4.0"
+typing-extensions = "^4.6.3"
+cchardet = "^2.1.7"
+
+
+[tool.poetry.group.dev.dependencies]
+freezegun = "^1.2.2"
+pytest = "^7.4.0"
+pytest-mock = "^3.11.1"
+pytest-factoryboy = "^2.5.1"
+pytest-asyncio = "^0.21.1"
+flake8 = "^5.0.4"
+isort = "^5.10.1"
+tox = "^3.26.0"
+black = "^22.8.0"
+mypy = "^0.981"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
