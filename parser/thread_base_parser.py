@@ -3,16 +3,14 @@ import time
 from dataclasses import dataclass
 import httpx
 from bs4 import BeautifulSoup
+from typing import Any
 
 
 @dataclass
 class BaseParser:
     url: str
     page: str
-
-    def __init__(self, url, page):
-        self.url = url
-        self.page = page
+    semaphore: Any = None
 
     def get_page(self, url):
         with httpx.Client() as client:
@@ -41,13 +39,15 @@ class BaseParser:
                 print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
     def get_page_title(self, extracted_url):
-        url = ''.join((self.url, extracted_url))
-        soup = self.get_page(url)
-        if soup:
-            title = soup.select_one('h1.hero-heading').get_text()
-            print(title)
-        else:
-            print("Page not found")
+        with self.semaphore:
+
+            url = ''.join((self.url, extracted_url))
+            soup = self.get_page(url)
+            if soup:
+                title = soup.select_one('h1.hero-heading').get_text()
+                print(title)
+            else:
+                print("Page not found")
 
     def get_titles(self, extracted_urls):
         for url in extracted_urls:
@@ -55,6 +55,7 @@ class BaseParser:
             self.get_page_title(extracted_url)
 
     def run(self):
+        self.semaphore = threading.Semaphore(8)
         extracted_urls = self.get_page_links()
         print(extracted_urls)
         ext_url = (i for i in extracted_urls)
