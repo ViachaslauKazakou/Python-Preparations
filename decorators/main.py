@@ -5,6 +5,7 @@ import cProfile
 
 def timer(fn):
     """ This is Simple decorator"""
+    @wraps(fn)
     def wrapped(*args, **kwargs):
         start = time.time()
         result = fn(*args, **kwargs)
@@ -110,6 +111,7 @@ def example_function1():
 def logger_func(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        print("= "*40)
         print(f"Start function {func.__name__}")
         result = func(*args, **kwargs)
         return result
@@ -129,6 +131,7 @@ if __name__ == "__main__":
     timer(counter2)(100000)
     print("-"*80)
     # counter3(1000)
+    print(example_function.__doc__)
     example_function()
     example_function1()
     pro_function()

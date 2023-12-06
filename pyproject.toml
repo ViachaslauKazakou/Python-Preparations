@@ -6,15 +6,17 @@ authors = ["Viachaslau Kazakou <sly.kazakoff@epam.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-asyncpg = "^0.27.0"
+python = "^3.10"
+asyncpg = "^0.29.0"
 python-json-logger = "^2.0.7"
-uvloop = "^0.17.0"
+uvloop = "^0.19.0"
 yarl = "^1.9.2"
-aiohttp-swagger3 = "^0.7.4"
-attrs = "21.4.0"
+attrs = "23.1.0"
 typing-extensions = "^4.6.3"
 cchardet = "^2.1.7"
+requests = "==2.31.0"
+httpx = "^0.25.2"
+beautifulsoup4 = "^4.12.2"
 
 
 [tool.poetry.group.dev.dependencies]
