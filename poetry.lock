@@ -928,6 +928,23 @@ files = [
 ]
 
 [[package]]
+name = "structlog"
+version = "23.2.0"
+description = "Structured Logging for Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "structlog-23.2.0-py3-none-any.whl", hash = "sha256:16a167e87b9fa7fae9a972d5d12805ef90e04857a93eba479d4be3801a6a1482"},
+    {file = "structlog-23.2.0.tar.gz", hash = "sha256:334666b94707f89dbc4c81a22a8ccd34449f0201d5b1ee097a030b577fa8c858"},
+]
+
+[package.extras]
+dev = ["structlog[tests,typing]"]
+docs = ["furo", "myst-parser", "sphinx", "sphinx-notfound-page", "sphinxcontrib-mermaid", "twisted"]
+tests = ["freezegun (>=0.2.8)", "pretend", "pytest (>=6.0)", "pytest-asyncio (>=0.17)", "simplejson"]
+typing = ["mypy (>=1.4)", "rich", "twisted"]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -1160,4 +1177,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ab42e179a3955f5ef9c0f38a05320f50c8fc3bd049821d5d37fa14c63085914b"
+content-hash = "82dd5964ee88b2fedb3d082f1cc29f7bb87ee1c083ca69fc06cb9b6e636cb72c"

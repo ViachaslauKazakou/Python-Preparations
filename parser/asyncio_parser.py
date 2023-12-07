@@ -1,54 +1,30 @@
-from dataclasses import dataclass
 import httpx
 import asyncio
 from bs4 import BeautifulSoup
 from decorators.main import timer
 import time
 from typing import Any
+from base_parser import BaseParser
+import gc
 
 
-@dataclass
-class BaseParser:
+class AsyncParser(BaseParser):
     url: str
     page: str
-    semaphore: Any = None
+    semaphore = None
     title: list = None
-
-    async def get_page(self, url):
-        async with httpx.AsyncClient() as client:
-            response = await client.get(url)
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.text, 'html.parser')
-                return soup
-            else:
-                print(f"Failed to retrieve the page {url}. Status code: {response.status_code}")
-
-    async def get_page_links(self):
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"{self.url}{self.page}")
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.text, 'html.parser')
-                anchor_tags = soup.select('a.stretched-link')
-                extracted_urls = []
-                if anchor_tags:
-                    for item in anchor_tags:
-                        extracted_urls.append(item.get('href'))
-                    print(f"Found {len(extracted_urls)} links")
-                    return extracted_urls
-                else:
-                    print("No anchor tag found on the page.")
-            else:
-                print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
     async def get_page_title(self, extracted_url):
         async with self.semaphore:
-            if soup := await self.get_page(extracted_url):
+            if soup := await self._get_page(extracted_url):
+                location = soup.select_one(".job-summary-location>div>ul>li").get_text()
                 title = soup.select_one('h1.hero-heading').get_text()
-                self.title.append(title.strip())
-            else :
+                self.title.append(f"{title}. Location:[ {location} ]")
+                return f"{title}. Location:[ {location} ]"
+            else:
                 print("page_not found")
 
-    async def get_titles(self, extracted_urls):
+    async def __get_titles(self, extracted_urls):
         for url in extracted_urls:
             extracted_url = ''.join((self.url, url))
             await self.get_page_title(extracted_url)
@@ -66,15 +42,24 @@ class BaseParser:
         await asyncio.gather(*tasks)
         [print(item) for item in self.title]
 
+    async def process(self):
+        await super().process()
+        self.title = []
+        self.semaphore = asyncio.Semaphore(16)
+        tasks = [self.get_page_title(''.join((self.site_url, url))) for url in self.extracted_urls]
+        await asyncio.gather(*tasks)
+        [print(item) for item in self.title]
 
-async def start():
-    url = "https://jobs.coxenterprises.com/"
-    page = "en/jobs/"
-    parser = BaseParser(url, page)
-    result = await parser.run()
 
 
 if __name__ == "__main__":
     start_time = time.time()
-    asyncio.run(start())
+    parser = AsyncParser("https://jobs.coxenterprises.com")
+    asyncio.run(parser.process())
     print(f"Execution time: {time.time()-start_time}")
+
+    print(gc.get_stats())
+    gc.collect(0)
+    print(gc.get_stats())
+    gc.collect(1)
+    print(gc.get_stats())
