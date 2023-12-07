@@ -24,7 +24,6 @@ node5.next = node3
 # Принудительное выполнение циклического сбора мусора
 # gc.collect()
 # gc.set_debug(gc.DEBUG_LEAK)
-# Отключение сборщика мусора (обычно не рекомендуется)
 stats = gc.get_stats()
 gc.set_threshold(700, 10, 10)
 node6 = Node(6)

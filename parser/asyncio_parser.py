@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from decorators.main import timer
 import time
 from typing import Any
-from base_parser import BaseParser
+from base_async_parser  import BaseParser
 import gc
 
 
@@ -24,24 +24,6 @@ class AsyncParser(BaseParser):
             else:
                 print("page_not found")
 
-    async def __get_titles(self, extracted_urls):
-        for url in extracted_urls:
-            extracted_url = ''.join((self.url, url))
-            await self.get_page_title(extracted_url)
-
-    async def run(self):
-        self.title = []
-        self.semaphore = asyncio.Semaphore(8)
-        extracted_urls = await self.get_page_links()
-        [print(f"{self.url}{item}") for item in extracted_urls]
-
-        # Create a list of coroutine tasks for get_page_title
-        tasks = [self.get_page_title(''.join((self.url, url))) for url in extracted_urls]
-
-        # Run the tasks concurrently using asyncio.gather
-        await asyncio.gather(*tasks)
-        [print(item) for item in self.title]
-
     async def process(self):
         await super().process()
         self.title = []
@@ -58,8 +40,4 @@ if __name__ == "__main__":
     asyncio.run(parser.process())
     print(f"Execution time: {time.time()-start_time}")
 
-    print(gc.get_stats())
-    gc.collect(0)
-    print(gc.get_stats())
-    gc.collect(1)
     print(gc.get_stats())
