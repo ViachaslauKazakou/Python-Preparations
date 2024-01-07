@@ -1,3 +1,4 @@
+from typing import List
 class Solution(object):
     def twoSum(self, nums, target):
         """
@@ -29,3 +30,10 @@ class Solution:
             if complement in hashmap:
                 return [i, hashmap[complement]]
             hashmap[nums[i]] = i
+
+
+if __name__ == "__main__":
+    nums = [2, 5, 5, 11, 4]
+    target = 6
+    res = Solution().twoSum(nums, target)
+    print(res)
