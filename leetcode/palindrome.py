@@ -14,9 +14,11 @@ class Solution(object):
             else:
                 return False
 
+
 x = -121
 x = 1234321
 print(Solution().isPalindrome(x))
+
 
 def isPalindrome(x: int) -> bool:
     if x < 0 or (x > 0 and x%10 == 0):   # if x is negative, return False. if x is positive and last digit is 0, that also cannot form a palindrome, return False.
@@ -28,5 +30,6 @@ def isPalindrome(x: int) -> bool:
         x = x // 10
 
     return True if (x == result or x == result // 10) else False
+
 
 print(isPalindrome(1234321))

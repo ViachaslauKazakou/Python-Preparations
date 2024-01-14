@@ -68,7 +68,8 @@ def example_function():
     """Примерная функция."""
     time.sleep(2)
     print("Function executed")
-    
+
+
 class TimeProfiler1:
     def __init__(self, func):
         wraps(func)(self)  # Применяем wraps для сохранения метаданных
@@ -81,6 +82,7 @@ class TimeProfiler1:
         execution_time = end_time - start_time
         print(f"{self.func.__name__} took {execution_time:.4f} seconds to execute")
         return result
+
 
 class Profiler:
     def __init__(self, func):
@@ -108,6 +110,7 @@ def example_function1():
     time.sleep(2)
     print("Function executed")
     
+
 def logger_func(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -117,12 +120,12 @@ def logger_func(func):
         return result
     return wrapper
 
+
 @logger_func
 def dataprint(name):
     print(name)
     
         
-
 if __name__ == "__main__":
     print(timer.__doc__)
     print(counter.__doc__)

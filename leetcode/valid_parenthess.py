@@ -1,25 +1,25 @@
-es = "()[]{}"
-class Braket:
-    validator = {
-        '(':')',
-        '[':']',
-        '{':'}'
-    }
+from dataclasses import dataclass
 
+es = "()[]{}"
+
+
+class Braket:
+    validator = {"(": ")", "[": "]", "{": "}"}
+
+@dataclass
 class Solution(object):
-    validator = {
-        '(': ')',
-        '[': ']',
-        '{': '}'
-    }
-    def isValid(self, s):
+    s: int = None
+
+    validator = {"(": ")", "[": "]", "{": "}"}
+
+    def _isValid(self):
         """
         :type s: str
         :rtype: bool
         """
-        check_list = list(s)
+        check_list = list(self.s)
         valid = False
-        if check_list[0] in ')]}':
+        if check_list[0] in ")]}":
             return valid
         while len(check_list) > 0:
             print(check_list)
@@ -33,20 +33,16 @@ class Solution(object):
                 valid = False
                 return valid
         return valid
-
-
-
-
+    
+    def isValid(self):
+        check_list = list(self.s)
+        valid = False
+        print(check_list)
 
 
 if __name__ == "__main__":
-
-    s = "{[}]"
-
-    print(Solution().isValid(s))
-    s = "[{}]"
-
-    print(Solution().isValid(s))
-
-    s = "[{]"
-    print(Solution().isValid(s))
+    s = ["{[}]", "[{}]", "[{]"]
+    for item in s:
+        print("=" * 80)
+        print(f"check: {item}")
+        print(Solution(item).isValid())
