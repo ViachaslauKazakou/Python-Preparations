@@ -6,7 +6,8 @@ from functools import wraps
 
 def timer(func):
     """ Return calc time of execution wrapped function"""
-    @wraps(func)
+    @wraps(func) 
+    
     def wrapper(self, *args, **kwargs):
         start = time.time()
         result = func(self, *args, **kwargs)
@@ -31,11 +32,11 @@ class SimpleFinder:
         else:
             # print(f"File {file_name} does not exists")
             self.create_butch(file_name, name)
-    
+
     def get_filename(self, name):
         first_name = str(int(name / 10000))
         return "".join((first_name, "0000"))
-    
+
     def _if_exist(self, filename):
         files_list = (os.listdir("file_finder/storage"))
         if filename in files_list:
@@ -58,13 +59,20 @@ class SimpleFinder:
         if filename:
             print(f"Found file {filename} for checking ip {name}")
             with open(f"file_finder/storage/{filename}") as f:
-                data_ip = f.read()
-                if data_ip:
-                    ip_list = data_ip.split(' ')
-                    print(f"Count of records: {len(ip_list)}")
-                    if str(name) in ip_list:
+                while line := f.readline():
+                    print(line)
+                    print("-" * 100)
+                    if name in line.strip().split(" "):
                         print(f"This ip({name}) was blocked for download")
-                        return
+                        break
+
+                # data_ip = f.read()
+                # if data_ip:
+                #     ip_list = data_ip.split(' ')
+                #     print(f"Count of records: {len(ip_list)}")
+                #     if str(name) in ip_list:
+                #         print(f"This ip({name}) was blocked for download")
+                #         return
         print(f"This ip({name}) can be download!!!")
 
 
