@@ -20,6 +20,18 @@ services:
         hard: 120000
     networks:
       - python-preparation
+  
+  mongodb:
+    image: mongo:latest
+    container_name: my-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - ./data:/data/db
+
 
 #   parser-backend:
 #     build:

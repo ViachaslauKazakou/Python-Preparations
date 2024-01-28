@@ -1,3 +1,4 @@
+from typing import List
 class Solution:
     def reverse(self, x: int) -> int:
         neg = False
@@ -11,6 +12,19 @@ class Solution:
         else:
             return res
 
+    def reverseString(self, s: List[str]) -> None:
+        """
+        Do not return anything, modify s in-place instead.
+        """
+        print(f"String before: {s}")
+        s_len = len(s)
+        for i in range(int(s_len/2)):
+            s_curr = s[i]
+            s[i] = s[s_len-i-1]
+            s[s_len - i - 1] = s_curr
+        print(f"String after: {s}")
+
+
 
 if __name__ == "__main__":
     x = -123
@@ -23,3 +37,5 @@ if __name__ == "__main__":
     print(f"x: {x}")
 
     print(Solution().reverse(x))
+    s = ["A", "b", "c", "E", "d"]
+    Solution().reverseString(s)
