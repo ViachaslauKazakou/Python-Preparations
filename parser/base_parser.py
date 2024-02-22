@@ -1,11 +1,11 @@
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Any
 
 import httpx
 import structlog
 from bs4 import BeautifulSoup
-from typing import Any
 
 log = structlog.get_logger("Parser")
 

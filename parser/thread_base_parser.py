@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 
 
 class ThreadParser(BaseParser):
-
     semaphore: Any = None
 
     def get_page(self, url: str) -> Any:

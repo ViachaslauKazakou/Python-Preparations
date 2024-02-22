@@ -53,7 +53,7 @@ class BaseParser(Parser):
             else:
                 print("Page not found")
 
-    async def collect_links(self)-> None:
+    async def collect_links(self) -> None:
         print(self.site_url)
         for page in range(2, 6):
             current_url = "".join((self.site_url, f"/en/jobs/?page={page}"))

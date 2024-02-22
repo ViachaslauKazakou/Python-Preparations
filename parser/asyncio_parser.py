@@ -1,12 +1,12 @@
 import asyncio
 import gc
 import time
+from typing import Any, List
 
 from base_async_parser import BaseParser
-from typing import List, Any
 
 
-class AsyncParser(BaseParser): # type: ignore
+class AsyncParser(BaseParser):  # type: ignore
     url: str
     page: str
     semaphore = None
