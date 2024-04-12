@@ -7,7 +7,8 @@ from pymongo import MongoClient
 class MongoView:
     
     def __init__(self):
-        self.client = MongoClient('mongodb://admin:admin@localhost:27017/')
+        # self.client = MongoClient('mongodb://admin:admin@localhost:27017/')
+        self.client = MongoClient("mongodb://localhost:27017")
         self.db = self.client['test_database']
         
     def read_all_ip(self):
@@ -34,3 +35,5 @@ if __name__ == '__main__':
     client.insert_data("id", "122334")
     client.read_all_ip()
     client.find_data({'name':'John'})
+
+

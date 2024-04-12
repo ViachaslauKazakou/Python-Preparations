@@ -20,12 +20,15 @@ for item in pipeline:
 
 tuple = {}
 tuple[(1,2)] = 8
-print(tuple)
+# print(tuple)
 
 
-def func3(*args, **kwargs):
+def func3(a, *args, c=None, **kwargs):
     print(args)
     print(kwargs)
+    print(a)
+    print(c)
 
+if __name__ == "__main__":
+    func3(1,2,3,4, b={"q":2}, c=5, x=9)
 
-func3(12,12, x=5)
