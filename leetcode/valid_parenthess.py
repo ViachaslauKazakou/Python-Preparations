@@ -6,6 +6,7 @@ es = "()[]{}"
 class Braket:
     validator = {"(": ")", "[": "]", "{": "}"}
 
+
 @dataclass
 class Solution(object):
     s: int = None
@@ -33,10 +34,9 @@ class Solution(object):
                 valid = False
                 return valid
         return valid
-    
+
     def isValid(self):
         check_list = list(self.s)
-        valid = False
         print(check_list)
 
 
