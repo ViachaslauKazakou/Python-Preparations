@@ -18,16 +18,65 @@ Constraints:
 nums is sorted in non-decreasing order.
 """
 from typing import List
+
 class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:
-        j = 1
-        for i in range(1, len(nums)):
-            if nums[i] != nums[i - 1]:
-                nums[j] = nums[i]
-                j += 1
-        return j
+        """
+        Remove duplicates in-place from a sorted array.
         
+        Args:
+            nums: Sorted array of integers
+            
+        Returns:
+            Number of unique elements
+            
+        Examples:
+            >>> s = Solution()
+            >>> nums = [1,1,2]
+            >>> k = s.removeDuplicates(nums)
+            >>> nums[:k]
+            [1,2]
+        """
+        if not nums:
+            return 0
+            
+        if len(nums) == 1:
+            return 1
+            
+        # Position for next unique element
+        write_pos = 1
         
-nums = [0,0,1,1,1,2,2,3,3,4]
+        try:
+            # Iterate through array starting from second element
+            for read_pos in range(1, len(nums)):
+                if nums[read_pos] != nums[read_pos - 1]:
+                    nums[write_pos] = nums[read_pos]
+                    write_pos += 1
+                    
+            return write_pos
+            
+        except Exception as e:
+            print(f"Error processing array: {e}")
+            return 0
 
-print(Solution().removeDuplicates(nums))
+
+def main():
+    # Test cases
+    test_cases = [
+        [0,0,1,1,1,2,2,3,3,4],
+        [1,1,2],
+        [],
+        [1]
+    ]
+    
+    solution = Solution()
+    
+    for nums in test_cases:
+        k = solution.removeDuplicates(nums)
+        print(f"Input: {nums}")
+        print(f"Unique elements: {k}")
+        print(f"Modified array first {k} elements: {nums[:k]}\n")
+
+
+if __name__ == "__main__":
+    main()

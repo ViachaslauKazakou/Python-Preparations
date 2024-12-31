@@ -12,7 +12,12 @@ def upper_data(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         data = func(*args, **kwargs)
-        return data.upper()
+        if isinstance(data, list):
+            return [item.upper() for item in data if isinstance(item, str)]
+        elif isinstance(data, dict):
+            return {(key.upper() if isinstance(key, str) else key): value for key, value in data.items()}
+        else:
+            return data
     return wrapper
 
 @upper_data
