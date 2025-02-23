@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Move Tracker</title>
+    <style>
+        .draggable {
+            width: 300px;
+            height: 200px;
+            background-color: lightblue;
+            position: absolute;
+            margin: 50px;
+            cursor: grab;
+        }
+        #rectangle2 {
+            background-color: lightcoral;
+        }
+        #mouse-scroll {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #coordinates {
+            margin-top: 20px;
+            font-size: 18px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="rectangle" class="draggable"></div>
+    <div id="rectangle2" class="draggable"></div>
+    <div id="mouse-scroll">Mouse Coordinates: (0, 0)</div>
+    <button id="save-coordinates">Save Coordinates</button>
+    <div id="coordinates"></div>
+
+    <script>
+        const mouseScroll = document.getElementById('mouse-scroll');
+        const rectangles = document.querySelectorAll('.draggable');
+        const saveButton = document.getElementById('save-coordinates');
+        const coordinatesDiv = document.getElementById('coordinates');
+        let isDragging = false;
+        let offsetX, offsetY, currentRectangle;
+        let initialX, initialY;
+
+        document.addEventListener('mousemove', (event) => {
+            const x = event.clientX;
+            const y = event.clientY;
+            mouseScroll.textContent = `Mouse Coordinates: (${x}, ${y})`;
+
+            if (isDragging && currentRectangle) {
+                const dx = Math.abs(x - initialX);
+                const dy = Math.abs(y - initialY);
+                if (dx > 1 || dy > 1) {  // Threshold to start dragging
+                    currentRectangle.style.left = `${x - offsetX -50}px`;
+                    currentRectangle.style.top = `${y - offsetY -50}px`;
+                }
+            }
+        });
+
+        rectangles.forEach(rectangle => {
+            rectangle.addEventListener('mousedown', (event) => {
+                // Prevent default action to avoid moving the block
+                event.preventDefault();
+                
+                isDragging = true;
+                currentRectangle = rectangle;
+                offsetX = event.clientX - rectangle.getBoundingClientRect().left;
+                offsetY = event.clientY - rectangle.getBoundingClientRect().top;
+                initialX = event.clientX;
+                initialY = event.clientY;
+                rectangle.style.cursor = 'grabbing';
+            });
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            if (currentRectangle) {
+                currentRectangle.style.cursor = 'grab';
+                currentRectangle = null;
+            }
+        });
+
+        saveButton.addEventListener('click', () => {
+            const coordinates = Array.from(rectangles).map(rectangle => {
+                const rect = rectangle.getBoundingClientRect();
+                return {
+                    id: rectangle.id,
+                    left: rect.left,
+                    top: rect.top,
+                    width: rect.width,
+                    height: rect.height
+                };
+            });
+            coordinatesDiv.textContent = JSON.stringify(coordinates, null, 2);
+        });
+    </script>
+</body>
+</html>

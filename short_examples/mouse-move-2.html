@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprite Demo</title>
+    <style>
+        .sprite {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            position: absolute;
+            cursor: grab;
+        }
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="sprite1" class="sprite">
+        <a class="close-btn">X</a>
+        <div class="record">Sprite 1</div>
+    </div>
+    <div id="sprite2" class="sprite" style="left: 150px; top: 150px;">
+        <a class="close-btn">X</a>
+        <div class="record">Sprite 2</div>
+    </div>
+
+    <script>
+        import {$, $el, $ev} from './Tag.js';
+        import {Type, zIndex} from './Functions.js';
+
+        export var Sprite = {
+            [Symbol.toStringTag]: 'Sprite',
+            $: {
+                id: '', eH: 0, eW: 0, mX: 0, mY: 0
+            },
+            get aclose() {
+                return $('a', $el($('#' + Sprite.$.id)).child(0))[0];
+            },
+            get record() {
+                return $el($('#' + Sprite.$.id)).child(1);
+            },
+            create(id, cap, atr) {
+                let acl = $el($('+a')),
+                    div = $el($('+div')),
+                    elt = $el($('+div'));
+                acl.attr('class', 'badge float-right')
+                    .attr('title', 'закрыть').text('x');
+                $ev(acl.$).add('click', Sprite.close);
+                div.attr('class', 'cap cursor-move').text(cap).append(acl.$);
+                $ev(div.$).add('mousedown', Sprite.mousedown);
+                id = 'sprite_' + id; Sprite.$.id = id;
+                elt.attr('id', id);
+                if (typeof atr != 'object') atr = {};
+                if (!atr.position) atr.position = 'fixed';
+                atr.zIndex = zIndex();
+                for (let key in atr)
+                    switch (key) {
+                        case 'width': case 'height':
+                        case 'minWidth': case 'minHeight':
+                            if (Type(atr[key]) == 'number')
+                                atr[key] = atr[key] + 'px';
+                        case 'position': case 'zIndex':
+                            elt.$.style[key] = atr[key];
+                            break;
+                        default: elt.attr(key, atr[key]);
+                    }
+                elt.append(div.$).append($('+div'));
+                $el().append(elt.$)
+            },
+            position(elt) {
+                elt = $el(elt);
+                if (elt.style.position == 'static') {
+                    if (elt.$.parentNode != document.body)
+                        document.body.appendChild(elt.$);
+                    elt.$.style.width = elt.style.width;
+                    elt.$.style.height = elt.style.height;
+                    let val = elt.attr('data-class'),
+                        apn = ['fixed', 'absolute'];
+                    if (val) elt.class(val);
+                    val = elt.attr('data-position');
+                    if (apn.indexOf(val) == -1) val = apn[0];
+                    elt.$.style.position = val;
+                }
+            },
+            mousedown(ev) {
+                let elt = $el(ev.target);
+                if (elt.class('cursor-move', '?')) {
+                    elt = elt.$.closest('[id^="sprite_"]');
+                    if (elt) {
+                        Sprite.position(elt)
+                        let Spr = Sprite.$; Spr.id = elt.id;
+                        let pos = elt.getBoundingClientRect();
+                        Spr.mY = ev.clientY - pos.top; Spr.eW = pos.right - pos.left;
+                        Spr.mX = ev.clientX - pos.left; Spr.eH = pos.bottom - pos.top;
+                        pos = elt.style.position == 'fixed' ? true : false;
+                        elt.style.top = (pos ? ev.clientY : ev.pageY) - Spr.mY + 'px',
+                            elt.style.left = (pos ? ev.clientX : ev.pageX) - Spr.mX + 'px';
+                        elt.style.zIndex = zIndex();
+                        $el().class('noselect');
+                        $ev(elt).add('mouseup', Sprite.mouseup);
+                        $ev(document).add('mousemove', Sprite.mousemove);
+                    }
+                }
+            },
+            mousemove(ev) {
+                let Spr = Sprite.$;
+                let style = $('#' + Spr.id).style;
+                let pos = style.position == 'fixed' ? true : false;
+                let pY = (pos ? ev.clientY : ev.pageY) - Spr.mY,
+                    pX = (pos ? ev.clientX : ev.pageX) - Spr.mX,
+                    mW = window.innerWidth - (pos ? 0 : pageXOffset) - Spr.eW,
+                    mH = window.innerHeight - (pos ? 0 : pageYOffset) - Spr.eH;
+                if (pX < (pos ? 0 : pageXOffset)) pX = pos ? 0 : pageXOffset; else if (pX > mW) pX = mW;
+                if (pY < (pos ? 0 : pageYOffset)) pY = pos ? 0 : pageYOffset; else if (pY > mH) pY = mH;
+                style.top = pY + 'px'; style.left = pX + 'px';
+            },
+            mouseup() {
+                $el().class('noselect');
+                $ev(document).del('mousemove', Sprite.mousemove);
+                $ev($('#' + Sprite.$.id)).del('mouseup', Sprite.mouseup);
+            },
+            find(id) {
+                let elt = $('#sprite_' + id);
+                if (elt) { Sprite.$.id = elt.id; elt = true }
+                return elt
+            },
+            centre() {
+                let Spr = Sprite.$,
+                    elt = $('#' + Spr.id), style = elt.style,
+                    pos = elt.getBoundingClientRect();
+                Spr.eW = pos.right - pos.left; Spr.eH = pos.bottom - pos.top;
+                pos = style.position == 'fixed' ? true : false;
+                let pX = document.body.clientWidth / 2 - Spr.eW / 2 + (pos ? 0 : pageXOffset),
+                    pY = document.body.clientHeight / 2 - Spr.eH / 2 + (pos ? 0 : pageYOffset);
+                style.top = pY + 'px'; style.left = pX + 'px';
+                Sprite.mousemove(event)
+            },
+            open(elt, sx, sy) {
+                switch (Type(elt)) {
+                    case 'object MouseEvent': elt = elt.target;
+                        elt = elt.closest('[id^="sprite_"]');
+                        break;
+                    case undefined: elt = Sprite.$.id;
+                    case 'string': elt = $('#sprite_' + elt);
+                }
+                if (elt) {
+                    Sprite.position(elt)
+                    let style = elt.style; style.zIndex = zIndex();
+                    if (style.display == 'none') style.display = '';
+                    if (sx != undefined && sy != undefined) {
+                        let pX = event.clientX + sx, pY = event.clientY + sy;
+                        style.top = pY + 'px'; style.left = pX + 'px';
+                    }
+                }
+            },
+            close(elt) {
+                switch (Type(elt)) {
+                    case undefined: elt = event;
+                    case 'object MouseEvent': elt = elt.target;
+                        elt = elt.closest('[id^="sprite_"]');
+                        break;
+                    case 'string': elt = $('#' + elt);
+                }
+                let style = elt.style;
+                if (style.display != 'none') style.display = 'none';
+            },
+            cook() {
+                let spr = $('[id^="sprite_"]');
+                if (spr) for (let elt of spr) {
+                    elt = $('[class~="cursor-move"]', elt, 0);
+                    if (elt) $ev(elt).add('mousedown', Sprite.mousedown);
+                }
+            }
+        };
+
+        Sprite.cook();
+
+        // Пример использования
+        document.querySelectorAll('.sprite').forEach(sprite => {
+            sprite.addEventListener('mousedown', (event) => {
+                Sprite.$.id = sprite.id;
+                Sprite.$.mX = event.clientX - sprite.getBoundingClientRect().left;
+                Sprite.$.mY = event.clientY - sprite.getBoundingClientRect().top;
+                sprite.style.cursor = 'grabbing';
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        });
+
+        function onMouseMove(event) {
+            const sprite = document.getElementById(Sprite.$.id);
+            sprite.style.left = `${event.clientX - Sprite.$.mX}px`;
+            sprite.style.top = `${event.clientY - Sprite.$.mY}px`;
+        }
+
+        function onMouseUp() {
+            const sprite = document.getElementById(Sprite.$.id);
+            sprite.style.cursor = 'grab';
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+    </script>
+</body>
+</html>
