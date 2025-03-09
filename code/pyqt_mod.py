@@ -1,99 +1,79 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
- 
+
+BUTTON_CONFIGS = [
+    ("otvet1", 50, 50, "Ч1"),
+    ("otvet2", 50, 100, "М2"),
+    ("otvet3", 180, 50, "Б2"),
+    ("otvet4", 180, 100, "М3"),
+    ("otvet5", 310, 50, "Б3"),
+    ("otvet6", 310, 100, "Ч4"),
+    ("otvet7", 440, 50, "Ч5"),
+    ("otvet8", 440, 100, "М6"),
+    ("otvet9", 570, 50, "Б6"),
+    ("otvet10", 570, 100, "М7"),
+    ("otvet11", 700, 50, "Б7"),
+    ("otvet12", 700, 100, "Ч8"),
+]
+
+
 class Ui_MainWindow(object):
- 
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(838, 803)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.otvet1 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet1.setGeometry(QtCore.QRect(50, 50, 75, 23))
-        self.otvet1.setObjectName("otvet1")
-        self.otvet2 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet2.setGeometry(QtCore.QRect(50, 100, 75, 23))
-        self.otvet2.setObjectName("otvet2")
-        self.otvet4 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet4.setGeometry(QtCore.QRect(180, 100, 75, 23))
-        self.otvet4.setObjectName("otvet4")
-        self.otvet3 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet3.setGeometry(QtCore.QRect(180, 50, 75, 23))
-        self.otvet3.setObjectName("otvet3")
-        self.otvet6 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet6.setGeometry(QtCore.QRect(310, 100, 75, 23))
-        self.otvet6.setObjectName("otvet6")
-        self.otvet5 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet5.setGeometry(QtCore.QRect(310, 50, 75, 23))
-        self.otvet5.setObjectName("otvet5")
-        self.otvet8 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet8.setGeometry(QtCore.QRect(440, 100, 75, 23))
-        self.otvet8.setObjectName("otvet8")
-        self.otvet7 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet7.setGeometry(QtCore.QRect(440, 50, 75, 23))
-        self.otvet7.setObjectName("otvet7")
-        self.otvet10 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet10.setGeometry(QtCore.QRect(570, 100, 75, 23))
-        self.otvet10.setObjectName("otvet10")
-        self.otvet9 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet9.setGeometry(QtCore.QRect(570, 50, 75, 23))
-        self.otvet9.setObjectName("otvet9")
-        self.otvet12 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet12.setGeometry(QtCore.QRect(700, 100, 75, 23))
-        self.otvet12.setObjectName("otvet12")
-        self.otvet11 = QtWidgets.QPushButton(self.centralwidget)
-        self.otvet11.setGeometry(QtCore.QRect(700, 50, 75, 23))
-        self.otvet11.setObjectName("otvet11")
+
+        # Create buttons and connect signals
+        self.buttons = {}
+        for name, x, y, text in BUTTON_CONFIGS:
+            button = self.create_button(name, x, y)
+            button.setText(text)
+            button.clicked.connect(lambda checked, t=text: self.otvetu(t))
+            self.buttons[name] = button
+
+        # Create labels
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(180, 690, 421, 61))
         self.label.setText("Пример текста в низу")
         self.label.setObjectName("label")
+
         self.primer = QtWidgets.QLabel(self.centralwidget)
         self.primer.setGeometry(QtCore.QRect(266, 390, 221, 41))
         self.primer.setText("Ч1")
         self.primer.setObjectName("primer")
+
         MainWindow.setCentralWidget(self.centralwidget)
-        self.add_func()
-        self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.otvet1.setText(_translate("MainWindow", "Ч1"))
-        self.otvet2.setText(_translate("MainWindow", "М2"))
-        self.otvet4.setText(_translate("MainWindow", "М3"))
-        self.otvet3.setText(_translate("MainWindow", "Б2"))
-        self.otvet6.setText(_translate("MainWindow", "Ч4"))
-        self.otvet5.setText(_translate("MainWindow", "Б3"))
-        self.otvet8.setText(_translate("MainWindow", "М6"))
-        self.otvet7.setText(_translate("MainWindow", "Ч5"))
-        self.otvet10.setText(_translate("MainWindow", "М7"))
-        self.otvet9.setText(_translate("MainWindow", "Б6"))
-        self.otvet12.setText(_translate("MainWindow", "Ч8"))
-        self.otvet11.setText(_translate("MainWindow", "Б7"))
-        
+
     def otvetu(self, otvet):
-        if otvet == self.primer.text:
+        """Handle button click and compare answers"""
+        label_text = self.primer.text()  # Call the text() method
+        print(f"Button text: {otvet}, Label text: {label_text}")
+        print(f"Types - Button: {type(otvet)}, Label: {type(label_text)}")
+
+        # Ensure exact string comparison
+        if str(otvet).strip() == str(label_text).strip():
             self.label.setText("Правильно!")
         else:
             self.label.setText("Неправильно!")
-            
-    def add_func(self):
-        self.otvet1.clicked.connect(lambda: self.otvetu(self.otvet1.text))
-        self.otvet2.clicked.connect(lambda: self.otvetu(self.otvet2.text))
-        self.otvet3.clicked.connect(lambda: self.otvetu(self.otvet3.text))
-        self.otvet4.clicked.connect(lambda: self.otvetu(self.otvet4.text))
-        self.otvet5.clicked.connect(lambda: self.otvetu(self.otvet5.text))
-        self.otvet6.clicked.connect(lambda: self.otvetu(self.otvet6.text))
-        self.otvet7.clicked.connect(lambda: self.otvetu(self.otvet7.text))
-        self.otvet8.clicked.connect(lambda: self.otvetu(self.otvet8.text))
-        self.otvet9.clicked.connect(lambda: self.otvetu(self.otvet9.text))
-        self.otvet11.clicked.connect(lambda: self.otvetu(self.otvet11.text))
-        self.otvet12.clicked.connect(lambda: self.otvetu(self.otvet12.text))
- 
- 
+
+    def create_button(self, name, x, y):
+        """Helper method to create a button with given parameters"""
+        button = QtWidgets.QPushButton(self.centralwidget)
+        button.setGeometry(QtCore.QRect(x, y, 75, 23))
+        button.setObjectName(name)
+        setattr(self, name, button)  # Make button accessible as self.otvet1, etc.
+        return button
+
+
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
