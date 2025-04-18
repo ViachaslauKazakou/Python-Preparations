@@ -1,19 +1,17 @@
-
-def custom(count):
-    print(f"Have {count} cookies")
-    for custom in range(7):
-        count = (lambda x: round(x / 2) + 1 if x > 0 else 0)(count)
-        print(f"rest: {count} after custom {custom}")
-    return count
+def custom(initial_count):
+    print(f"Starting with {initial_count} cookies")
+    for iteration in range(7):
+        initial_count = max(round(initial_count / 2) + 1, 0)
+        print(f"Remaining: {initial_count} after iteration {iteration}")
+    return initial_count
 
 if __name__ == "__main__":
     cookies = 0
     while True:
-        rest = custom(count=cookies)
-        print(f"Customs get {cookies} and return {rest} cookies")
+        remaining = custom(initial_count=cookies)
+        print(f"Started with {cookies} cookies, ended with {remaining} cookies")
         
-        if rest == 2:
-            print(f"We need  {cookies} cookies on start")
+        if remaining == 2:
+            print(f"We need {cookies} cookies at the start")
             break
-        else:
-            cookies += 1
+        cookies += 1
