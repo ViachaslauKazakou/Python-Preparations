@@ -34,6 +34,7 @@ pyqt5 = "^5.15.11"
 shapely = "^2.0.7"
 networks = "^0.3.7"
 networkx = "^3.4.2"
+chardet = "^5.2.0"
 
 [tool.poetry.group.dev.dependencies]
 freezegun = "^1.2.2"

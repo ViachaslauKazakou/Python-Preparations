@@ -1,5 +1,6 @@
 import time
 from functools import wraps
+import random
 
 
 def execution_timer(func):
@@ -100,3 +101,6 @@ if __name__ == "__main__":
     print(max_dig_opt(number))
     print(get_count_max_digit(number))
     print(get_count_max_digit("12345678rrr90"))
+
+    a = random.randint(1, 100)
+    print a

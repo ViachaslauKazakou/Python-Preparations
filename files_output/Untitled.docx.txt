@@ -1,0 +1,1 @@
+the vscode python settings are configured to use local .venv : poetry is configured to create virtualenvs in project : to complete the setup : add to user settings for vscode
