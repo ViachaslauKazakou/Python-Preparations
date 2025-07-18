@@ -1,0 +1,7 @@
+{
+    "name": "Вася",
+    "weapons": {
+        "sword": true,
+        "bow": false
+    }
+}
